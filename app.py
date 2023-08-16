@@ -3,8 +3,20 @@ from flask import Flask, render_template,redirect
 app = Flask(__name__)
 
 @app.route("/")
-def home():
-     return render_template('home.html')
+def landing():
+     return render_template('landing.html')
+
+
+
+@app.route('/login',methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # handle request
+         pass
+    return render_template('login.html')
+
+
+
 
 @app.route('/<string:page_name>')
 def page(page_name="/"):
