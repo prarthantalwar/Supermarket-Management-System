@@ -1,8 +1,6 @@
 from flask import Flask, render_template,redirect, request
 from database import mycursor
 
-# COMMAND TO USE THE CREATED DATABASE
-mycursor.execute("USE talwar_supermarket_management_system")
 
 app = Flask(__name__)
 
