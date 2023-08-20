@@ -1,6 +1,8 @@
 from flask import Flask, render_template,redirect, request
 from database import mycursor
 
+# COMMAND TO USE THE CREATED DATABASE
+mycursor.execute("USE talwar_supermarket_management_system")
 
 app = Flask(__name__)
 
@@ -22,6 +24,7 @@ def login():
         data = mycursor.fetchall()
         response = data[0][0]
         if response == 1:
+            print('here')
             query=f"SELECT USER_ROLE FROM USERS WHERE USERNAME='{username}'"
             print(query)
             mycursor.execute(query)
