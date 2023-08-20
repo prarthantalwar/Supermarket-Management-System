@@ -35,6 +35,8 @@ def login():
                 return redirect("/dataop")
             else:
                 return redirect("/billop")
+        else:
+            return render_template('login.html', error="Invalid login or credentials mismatch")
     return render_template('login.html')
 
 
