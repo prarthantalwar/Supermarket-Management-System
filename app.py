@@ -1,6 +1,9 @@
 from flask import Flask, render_template,redirect, request, session,g, flash
 from database import mycursor
 import os
+
+
+
 # COMMAND TO USE THE CREATED DATABASE
 mycursor.execute("USE talwar_supermarket_management_system")
 
