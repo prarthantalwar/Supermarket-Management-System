@@ -2,3 +2,5 @@ Flask
 gunicorn
 mysql-connector-python
 python-dotenv
+flask_wtf
+wtforms

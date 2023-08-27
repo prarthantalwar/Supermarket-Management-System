@@ -1,1 +1,18 @@
-Add product by excel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add products by excel</title>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data">
+        {{form.hidden_tag()}}
+        {{form.file()}}
+        {{form.submit()}}
+    </form>
+    <a href="/add_prods">Add products manually</a>
+
+    {% include 'go_to_main.html' %}
+</body>
+</html>

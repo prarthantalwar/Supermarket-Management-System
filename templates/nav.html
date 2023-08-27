@@ -1,0 +1,21 @@
+<nav class="navbar shadow-sm fixed-top bg-white">
+    <div class="container-fluid">
+        {% if user == 'admin' %}
+        <a class="navbar-brand" href="/admin">
+            <img src="/static/favicon4.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            Talwar's
+        </a>
+        {% elif 'dataop' in user %}
+        <a class="navbar-brand" href="/dataop">
+            <img src="/static/favicon4.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            Talwar's
+        </a>
+        {% elif 'billop' in user %}
+        <a class="navbar-brand" href="/billop">
+            <img src="/static/favicon4.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            Talwar's
+        </a>
+        {% endif %}
+    </div>
+</nav>
+<div style="height:56px"></div>

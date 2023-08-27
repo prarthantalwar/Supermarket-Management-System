@@ -1,8 +1,10 @@
+import os
 from flask import Flask, render_template,redirect, request, session, g, flash
 from database import mycursor,myconn
-from datetime import datetime
-
-import os
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField
+from werkzeug.utils import secure_filename
+from wtforms.validators import InputRequired
 
 
 
@@ -12,6 +14,16 @@ mycursor.execute("USE talwar_supermarket_management_system")
 app = Flask(__name__)
 
 app.secret_key=os.urandom(33)
+app.config['UPLOAD_FOLDER'] = 'static/uploaded_excel'
+
+
+
+class Uploadexcel(FlaskForm):
+    file = FileField("File", validators=[InputRequired()])
+    submit = SubmitField("Upload Excel Sheet")
+
+
+
 
 @app.route("/")
 def landing():
@@ -163,19 +175,13 @@ def list_prods():
 @app.route('/add_prods', methods=['GET','POST'])
 def add_prods():
     if g.user:
-        print("g.user")
         if request.method=='POST':
-            print("\n\n\n\nIn add prods function")
             name = request.form['prod_name']
-            print("name:", name, "type:", type(name))
             barcode = request.form['barcode']
             mrp = request.form['mrp']
-            print("mrp:", mrp, "type:", type(mrp))
             rate = request.form['rate']
             qty = request.form['qty']
             expiry = request.form['expiry']
-            print("Expiry:", expiry, "type:", type(expiry))
-            expiry = datetime.strptime(expiry, '%Y-%m-%d').date()
             query=f"INSERT INTO INVENTORY(PRODUCT_NAME, BARCODE, MRP, SELLING_PRICE, QTY, EXPIRY_DATE) VALUES('{name}','{barcode}','{mrp}','{rate}','{qty}','{expiry}')"
             mycursor.execute(query)
             myconn.commit()
@@ -183,6 +189,21 @@ def add_prods():
 
         return render_template('add_prods.html', user=session['user'])
     return redirect('/')
+
+
+@app.route('/add_prod_by_excel', methods=['GET','POST'])
+def add_prod_by_excel():
+    if g.user:
+        form=Uploadexcel()
+        if form.validate_on_submit():
+            file = form.file.data # First grab the file
+            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
+            return redirect('/add_prods')
+        
+        return render_template('add_prod_by_excel.html', user=session['user'], form=form)
+    return redirect('/')
+
+
 
 
 @app.route('/apply_rem_disc')

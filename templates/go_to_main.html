@@ -1,0 +1,7 @@
+{% if user == 'admin' %}
+<a href="/admin">Go back to the main menu</a>
+{% elif 'dataop' in user %}
+<a href="/dataop">Go back to the main menu</a>
+{% elif 'billop' in user %}
+<a href="/billop">Go back to the main menu</a>
+{% endif %}
