@@ -191,17 +191,38 @@ def add_prods():
     return redirect('/')
 
 
-@app.route('/add_prod_by_excel', methods=['GET','POST'])
+@app.route('/add_prod_by_excel', methods=['GET', 'POST'])
 def add_prod_by_excel():
     if g.user:
-        form=Uploadexcel()
+        form = Uploadexcel()
         if form.validate_on_submit():
-            file = form.file.data # First grab the file
-            file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
+            file = form.file.data  # First grab the file
+            upload_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'])
+            
+            # Ensure that the upload directory exists
+            if not os.path.exists(upload_dir):
+                os.makedirs(upload_dir)
+            
+            file_path = os.path.join(upload_dir, secure_filename(file.filename))
+            file.save(file_path)  # Then save the file
             return redirect('/add_prods')
-        
+
         return render_template('add_prod_by_excel.html', user=session['user'], form=form)
     return redirect('/')
+
+
+
+# @app.route('/add_prod_by_excel', methods=['GET','POST'])
+# def add_prod_by_excel():
+#     if g.user:
+#         form=Uploadexcel()
+#         if form.validate_on_submit():
+#             file = form.file.data # First grab the file
+#             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
+#             return redirect('/add_prods')
+        
+#         return render_template('add_prod_by_excel.html', user=session['user'], form=form)
+#     return redirect('/')
 
 
 
