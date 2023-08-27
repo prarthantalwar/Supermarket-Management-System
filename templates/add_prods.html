@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add products to database</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Add products to the database</h2>
+        <form action="/add_prods", method="POST">
+            <div class="form-group">
+                <label for="prod_name">Product name:</label>
+                <input type="text" class="form-control" id="prod_name" placeholder="Enter the product name"
+                    name="prod_name">
+            </div>
+            <div class="form-group">
+                <label for="barcode">Product barcode:</label>
+                <input type="number" class="form-control" id="barcode" placeholder="Enter the product barcode"
+                    name="barcode">
+            </div>
+            <div class="form-group">
+                <label for="mrp">Product MRP:</label>
+                <input type="number" class="form-control" id="mrp" placeholder="Enter the product MRP"
+                    name="mrp">
+            </div>
+
+            <div class="form-group">
+                <label for="rate">Product Rate:</label>
+                <input type="number" class="form-control" id="rate" placeholder="Enter the product rate"
+                    name="rate">
+            </div>
+
+            <div class="form-group">
+                <label for="qty">Product quantity:</label>
+                <input type="number" class="form-control" id="qty" placeholder="Enter the product quantity"
+                    name="qty">
+            </div>
+
+            <div class="form-group">
+                <label for="expiry">Product expiry:</label>
+                <input type="date" class="form-control" id="expiry" placeholder="Enter the product expiry"
+                    name="expiry">
+            </div>
+
+
+            <button type="submit" class="btn btn-default">Insert</button>
+        </form>
+    </div>
+    <a href="/add_prod_by_excel">Add products by excel instead</a>
+    <a href="#">Go back to the main menu</a>
+</body>
+
+</html>

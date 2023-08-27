@@ -1,5 +1,7 @@
-from flask import Flask, render_template,redirect, request, session,g, flash
-from database import mycursor
+from flask import Flask, render_template,redirect, request, session, g, flash
+from database import mycursor,myconn
+from datetime import datetime
+
 import os
 
 
@@ -23,24 +25,15 @@ def login():
         session.pop('user', None)
         username = request.form['username']
         password = request.form['password']
-        print(type(username), username, type(password), password)
-
         query= f"SELECT EXISTS(SELECT * from USERS WHERE USERNAME='{username}' AND PASS='{password}')"
-        print("\n\n\n\n\n\n\n\n")
-        print(query)
-        print("\n\n\n\n\n\n\n\n")
         mycursor.execute(query)
         data = mycursor.fetchall()
         response = data[0][0]
         if response == 1:
-            print('here')
             query=f"SELECT USER_ROLE FROM USERS WHERE USERNAME='{username}'"
-            print(query)
             mycursor.execute(query)
             data = mycursor.fetchall()
-            print(data,type(data))
             response = data[0][0]
-            print(response, type(response))
             if response == 'Administrator':
                 session['user'] = request.form['username']
                 flash('You have successfully logged in',)
@@ -167,9 +160,27 @@ def list_prods():
     return redirect('/')
 
 
-@app.route('/add_prods')
+@app.route('/add_prods', methods=['GET','POST'])
 def add_prods():
     if g.user:
+        print("g.user")
+        if request.method=='POST':
+            print("\n\n\n\nIn add prods function")
+            name = request.form['prod_name']
+            print("name:", name, "type:", type(name))
+            barcode = request.form['barcode']
+            mrp = request.form['mrp']
+            print("mrp:", mrp, "type:", type(mrp))
+            rate = request.form['rate']
+            qty = request.form['qty']
+            expiry = request.form['expiry']
+            print("Expiry:", expiry, "type:", type(expiry))
+            expiry = datetime.strptime(expiry, '%Y-%m-%d').date()
+            query=f"INSERT INTO INVENTORY(PRODUCT_NAME, BARCODE, MRP, SELLING_PRICE, QTY, EXPIRY_DATE) VALUES('{name}','{barcode}','{mrp}','{rate}','{qty}','{expiry}')"
+            mycursor.execute(query)
+            myconn.commit()
+            return redirect('/add_prods')
+
         return render_template('add_prods.html', user=session['user'])
     return redirect('/')
 

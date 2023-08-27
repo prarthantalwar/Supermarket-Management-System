@@ -16,9 +16,9 @@ mycursor=myconn.cursor()
 mycursor.execute("USE talwar_supermarket_management_system")
 
 #mycursor.execute("SELECT EXISTS(SELECT * from USERS WHERE USERNAME='admin' AND PASS='administrat' )")
-mycursor.execute("SELECT USER_ROLE FROM USERS")
+# mycursor.execute("SELECT USER_ROLE FROM USERS")
 
-data=mycursor.fetchall()
-for i in data:
-    if i[0] == "Data Operator":
-        print(i[0])
+# data=mycursor.fetchall()
+# for i in data:
+#     if i[0] == "Data Operator":
+#         print(i[0])
