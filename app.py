@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
+import pandas as pd
 
 
 
@@ -198,31 +199,34 @@ def add_prod_by_excel():
         if form.validate_on_submit():
             file = form.file.data  # First grab the file
             upload_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'])
-            
+
             # Ensure that the upload directory exists
             if not os.path.exists(upload_dir):
                 os.makedirs(upload_dir)
-            
-            file_path = os.path.join(upload_dir, secure_filename(file.filename))
-            file.save(file_path)  # Then save the file
-            return redirect('/add_prods')
+
+            # Check the file extension
+            if file and allowed_file(file.filename):
+                file_path = os.path.join(upload_dir, secure_filename(file.filename))
+                file.save(file_path)  # Then save the file
+
+                # Now, you can access and manipulate the uploaded Excel file using pandas
+                df = pd.read_excel(file_path)
+
+                # Perform your manipulations on the DataFrame here
+                print(df.head())
+
+                return redirect('/add_prods')
+            else:
+                flash('Invalid file format. Only Excel files (.xlsx, .xls) are allowed.', 'error')
 
         return render_template('add_prod_by_excel.html', user=session['user'], form=form)
     return redirect('/')
 
+# Function to check if a file has an allowed extension
+def allowed_file(filename):
+    allowed_extensions = {'xlsx', 'xls'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
-
-# @app.route('/add_prod_by_excel', methods=['GET','POST'])
-# def add_prod_by_excel():
-#     if g.user:
-#         form=Uploadexcel()
-#         if form.validate_on_submit():
-#             file = form.file.data # First grab the file
-#             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
-#             return redirect('/add_prods')
-        
-#         return render_template('add_prod_by_excel.html', user=session['user'], form=form)
-#     return redirect('/')
 
 
 
