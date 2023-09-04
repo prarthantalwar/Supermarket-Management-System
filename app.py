@@ -89,17 +89,52 @@ def dataop():
 
 # Modules 
 
+
+
+
+
+
+def create_dataframe(column_names, data):
+    # Create a dictionary where keys are column names and values are lists of data
+    # Example of a column_name list =['Customer name','Customer ID', 'Customer Phone', 'Customer mail']
+    data_dict = {column: [item[i] for item in data] for i, column in enumerate(column_names)}
+
+    # Create a DataFrame from the dictionary
+    df = pd.DataFrame(data_dict)
+
+    return df
+
+
+
+
+
+
+
+
+
+
 @app.route('/user_deats')
 def user_deats():
     if g.user:
-        return render_template('user_deats.html', user=session['user'])
+        query = 'Select * from USERS'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        return render_template('user_deats.html', user=session['user'], data=data)
     return redirect('/')
 
 
 @app.route('/cust_deats')
 def cust_deats():
     if g.user:
-        return render_template('cust_deats.html', user=session['user'])
+        query = 'Select * from CUSTOMERS_INFO'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        print(data)
+        # query2 = "SELECT column_name FROM information_schema.columns WHERE table_name = 'USERS'"
+        # mycursor.execute(query2)
+        # columns=mycursor.fetchall()
+        # print(columns)
+        return render_template('cust_deats.html', user=session['user'], data=data)
     return redirect('/')
 
 
@@ -120,7 +155,10 @@ def prod_supp_tod():
 @app.route('/supp_deats')
 def supp_deats():
     if g.user:
-        return render_template('supp_deats.html', user=session['user'])
+        query = 'Select * from SUPPLIER_DETAILS'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        return render_template('supp_deats.html', user=session['user'], data=data)
     return redirect('/')
 
 
@@ -169,13 +207,17 @@ def search_prod_deats():
 @app.route('/list_prods')
 def list_prods():
     if g.user:
-        return render_template('list_prods.html', user=session['user'])
+        query = 'Select * from INVENTORY'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        return render_template('list_prods.html', user=session['user'], data=data)
     return redirect('/')
 
 
 @app.route('/add_prods', methods=['GET','POST'])
 def add_prods():
     if g.user:
+        print(g.user)
         if request.method=='POST':
             name = request.form['prod_name']
             barcode = request.form['barcode']
@@ -241,6 +283,7 @@ def apply_rem_disc():
 @app.route('/bill')
 def bill():
     if g.user:
+        print(g.user)
         return render_template('bill.html', user=session['user'])
     return redirect('/')
 

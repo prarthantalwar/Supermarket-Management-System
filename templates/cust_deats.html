@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer details</title>
+</head>
+
+<body>
+    <h1>Customer details </h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Customer ID</th>
+            <th>Phone</th>
+            <th>Mail</th>
+        </tr>
+        {% for user in data %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>{{ user[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% include 'go_to_main.html' %}
+</body>
+
+</html>
