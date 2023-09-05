@@ -94,15 +94,15 @@ def dataop():
 
 
 
-def create_dataframe(column_names, data):
-    # Create a dictionary where keys are column names and values are lists of data
-    # Example of a column_name list =['Customer name','Customer ID', 'Customer Phone', 'Customer mail']
-    data_dict = {column: [item[i] for item in data] for i, column in enumerate(column_names)}
+# def create_dataframe(column_names, data):
+#     # Create a dictionary where keys are column names and values are lists of data
+#     # Example of a column_name list =['Customer name','Customer ID', 'Customer Phone', 'Customer mail']
+#     data_dict = {column: [item[i] for item in data] for i, column in enumerate(column_names)}
 
-    # Create a DataFrame from the dictionary
-    df = pd.DataFrame(data_dict)
+#     # Create a DataFrame from the dictionary
+#     df = pd.DataFrame(data_dict)
 
-    return df
+#     return df
 
 
 
@@ -162,9 +162,23 @@ def supp_deats():
     return redirect('/')
 
 
-@app.route('/search_prod_supp_deats')
+@app.route('/search_prod_supp_deats',methods=['GET', 'POST'])
 def search_prod_supp_deats():
     if g.user:
+        if request.method == 'POST':
+            prod_name = request.form['prod_name']
+            prod_name_2= "%"+prod_name+"%"
+            print(prod_name_2)
+            query = f'Select SUPPLIER_ID from PRODUCTS_SUPPLIED where PRODUCT_NAME LIKE "{prod_name_2}"'
+            print(query)
+            mycursor.execute(query)
+            data=mycursor.fetchall()
+            supp_id=data[0][0]
+            query2=f'SELECT * FROM SUPPLIER_DETAILS WHERE SUPPLIER_ID = {supp_id}'
+            mycursor.execute(query2)
+            data2=mycursor.fetchall()
+            print(data2)
+            return render_template('search_prod_supp_deats.html', user=session['user'], data=data2)
         return render_template('search_prod_supp_deats.html', user=session['user'])
     return redirect('/')
 
