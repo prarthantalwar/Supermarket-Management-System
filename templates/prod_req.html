@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products required</title>
+</head>
+
+<body>
+    <h1>List of products required</h1>
+    <table>
+        
+        <tr>
+            {% for col  in col_heading %}
+            <td>{{ col }}</td>
+            {% endfor %}
+        </tr>
+        
+        {% for entry in data %}
+        {% set i=1%}
+        <tr>
+            <td>{{ i }}</td>
+            <td>{{ entry[1] }}</td>
+            {% set i = i+1%}
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% include 'go_to_main.html' %}
+</body>
+
+</html>

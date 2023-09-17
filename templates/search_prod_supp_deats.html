@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>search product supplier details</title>
+    <title>Search product supplier details</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -16,7 +16,7 @@
     <div class="container">
         <div class=" row justify-content-center">
             <div class="col-sm-8">
-                <h2>search product supplier details</h2>
+                <h2>Search product supplier details</h2>
                 <form action="/search_prod_supp_deats" method="POST">
                     <div class="form-group">
                         <label for="prod_name">Product name:</label>
@@ -28,8 +28,10 @@
         </div>
     </div>
     <div>
+        {{prod_name}}
         {{data}}
     </div>
+    {% include 'go_to_main.html' %}
 </body>
 
 </html>

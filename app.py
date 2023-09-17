@@ -6,6 +6,7 @@ from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
 import pandas as pd
+import datetime
 
 
 
@@ -130,25 +131,17 @@ def cust_deats():
         mycursor.execute(query)
         data=mycursor.fetchall()
         print(data)
+
+
+        # Add functionality to download in excel and pdf 
+
+
+        
         # query2 = "SELECT column_name FROM information_schema.columns WHERE table_name = 'USERS'"
         # mycursor.execute(query2)
         # columns=mycursor.fetchall()
         # print(columns)
         return render_template('cust_deats.html', user=session['user'], data=data)
-    return redirect('/')
-
-
-@app.route('/todays_trans')
-def todays_trans():
-    if g.user:
-        return render_template('todays_trans.html', user=session['user'])
-    return redirect('/')
-
-
-@app.route('/prod_supp_tod')
-def prod_supp_tod():
-    if g.user:
-        return render_template('prod_supp_tod.html', user=session['user'])
     return redirect('/')
 
 
@@ -159,6 +152,10 @@ def supp_deats():
         mycursor.execute(query)
         data=mycursor.fetchall()
         return render_template('supp_deats.html', user=session['user'], data=data)
+    
+
+
+    # Add functionality to download in excel and pdf
     return redirect('/')
 
 
@@ -178,14 +175,31 @@ def search_prod_supp_deats():
             mycursor.execute(query2)
             data2=mycursor.fetchall()
             print(data2)
-            return render_template('search_prod_supp_deats.html', user=session['user'], data=data2)
+            return render_template('search_prod_supp_deats.html', user=session['user'], data=data2, prod_name=prod_name)
         return render_template('search_prod_supp_deats.html', user=session['user'])
     return redirect('/')
 
 
-@app.route('/del_prod')
+@app.route('/del_prod',methods=['GET', 'POST', 'DELETE'])
 def del_prod():
     if g.user:
+        if request.method == 'POST':
+            bar_code = request.form['bar_code']
+            query1=f'SELECT * FROM INVENTORY WHERE BARCODE ={bar_code}'
+            mycursor.execute(query1)
+            data=mycursor.fetchall()
+            query = f'DELETE i1 FROM INVENTORY i1 JOIN (SELECT BARCODE FROM INVENTORY WHERE BARCODE = "{bar_code}") i2 ON i1.BARCODE = i2.BARCODE'
+            mycursor.execute(query)
+            myconn.commit()
+            flash("Product Deleted Successfully")
+
+
+
+            # Give an option to undo delete too 
+
+
+
+            return render_template('del_prod.html', user=session['user'], data=data)
         return render_template('del_prod.html', user=session['user'])
     return redirect('/')
 
@@ -193,14 +207,23 @@ def del_prod():
 @app.route('/prod_req')
 def prod_req():
     if g.user:
-        return render_template('prod_req.html', user=session['user'])
+        mycursor.execute("SELECT * FROM INVENTORY WHERE QTY<50")
+        data=mycursor.fetchall()
+        col_heading = ["Sl. no.", "Product Name"]
+        return render_template('prod_req.html', user=session['user'], data=data, col_heading = col_heading)
     return redirect('/')
 
 
 @app.route('/prod_30_exp')
 def prod_30_exp():
     if g.user:
-        return render_template('prod_30_exp.html', user=session['user'])
+        today=datetime.date.today()
+        next_month_date = (datetime.date.today()+datetime.timedelta(days=30)).isoformat()
+        #COMMAND TO RETRIEVE
+        mycursor.execute("SELECT * FROM INVENTORY WHERE EXPIRY_DATE between '{}' and '{}'".format(today,next_month_date))
+        data=mycursor.fetchall()
+        col_heading = ["Sl. no.", "Product Name", "Barcode", "Quantity", "Expiry date"]
+        return render_template('prod_30_exp.html', user=session['user'], data=data, col_heading = col_heading)
     return redirect('/')
 
 
@@ -286,6 +309,20 @@ def allowed_file(filename):
 
 
 
+@app.route('/todays_trans')
+def todays_trans():
+    if g.user:
+        return render_template('todays_trans.html', user=session['user'])
+    return redirect('/')
+
+
+@app.route('/prod_supp_tod')
+def prod_supp_tod():
+    if g.user:
+        return render_template('prod_supp_tod.html', user=session['user'])
+    return redirect('/')
+
+
 
 @app.route('/apply_rem_disc')
 def apply_rem_disc():
@@ -300,6 +337,11 @@ def bill():
         print(g.user)
         return render_template('bill.html', user=session['user'])
     return redirect('/')
+
+
+
+
+
 
 
 # @app.errorhandler(401)  # Error handler for unauthorized access to the page (login required).
