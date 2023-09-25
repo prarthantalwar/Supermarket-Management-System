@@ -289,10 +289,13 @@ def add_prod_by_excel():
                 file.save(file_path)  # Then save the file
 
                 # Now, you can access and manipulate the uploaded Excel file using pandas
-                df = pd.read_excel(file_path)
+                df = pd.read_excel(file_path, header=None)
 
-                # Perform your manipulations on the DataFrame here
-                print(df.head())
+                for row in df.itertuples(index=False, name=None):
+                    query=f"INSERT INTO INVENTORY(PRODUCT_NAME, BARCODE, MRP, SELLING_PRICE, QTY, EXPIRY_DATE) VALUES('{row[0]}','{row[1]}','{row[2]}','{row[3]}','{row[4]}','{row[5]}')"
+                    mycursor.execute(query)
+                    myconn.commit()
+                        
 
                 return redirect('/add_prods')
             else:
