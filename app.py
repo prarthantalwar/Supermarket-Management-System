@@ -227,17 +227,35 @@ def prod_30_exp():
     return redirect('/')
 
 
-@app.route('/edit_prod_deats')
+@app.route('/edit_prod_deats',methods=['GET', 'POST'])
 def edit_prod_deats():
     if g.user:
+        if request.method=='POST':
+            name = request.form['prod_name']
+            barcode = request.form['barcode']
+            mrp = request.form['mrp']
+            rate = request.form['rate']
+            qty = request.form['qty']
+            expiry = request.form['expiry']
+            query=f"UPDATE INVENTORY SET PRODUCT_NAME='{name}', MRP='{mrp}', SELLING_PRICE='{rate}', QTY='{qty}', EXPIRY_DATE='{expiry}' WHERE BARCODE='{barcode}'"
+            mycursor.execute(query)
+            myconn.commit()
+            return render_template('edit_prod_deats.html', user=session['user'])
         return render_template('edit_prod_deats.html', user=session['user'])
     return redirect('/')
 
 
-@app.route('/search_prod_deats')
+@app.route('/search_prod_deats',methods=['GET', 'POST'])
 def search_prod_deats():
     if g.user:
-        return render_template('search_prod_deats.html', user=session['user'])
+         if request.method == 'POST':
+            prod_name = request.form['prod_name']
+            prod_name_2= "%"+prod_name+"%"
+            query = f'Select * from INVENTORY where PRODUCT_NAME LIKE "{prod_name_2}"'
+            mycursor.execute(query)
+            data=mycursor.fetchall()
+            return render_template('search_prod_deats.html', user=session['user'], data=data)
+         return render_template('search_prod_deats.html', user=session['user'])
     return redirect('/')
 
 
@@ -254,7 +272,6 @@ def list_prods():
 @app.route('/add_prods', methods=['GET','POST'])
 def add_prods():
     if g.user:
-        print(g.user)
         if request.method=='POST':
             name = request.form['prod_name']
             barcode = request.form['barcode']
@@ -265,7 +282,8 @@ def add_prods():
             query=f"INSERT INTO INVENTORY(PRODUCT_NAME, BARCODE, MRP, SELLING_PRICE, QTY, EXPIRY_DATE) VALUES('{name}','{barcode}','{mrp}','{rate}','{qty}','{expiry}')"
             mycursor.execute(query)
             myconn.commit()
-            return redirect('/add_prods')
+            # return redirect('/add_prods')
+            return render_template('add_prods.html', user=session['user'])
 
         return render_template('add_prods.html', user=session['user'])
     return redirect('/')
@@ -315,21 +333,42 @@ def allowed_file(filename):
 @app.route('/todays_trans')
 def todays_trans():
     if g.user:
-        return render_template('todays_trans.html', user=session['user'])
+        todays_date = datetime.date.today().strftime('%Y-%m-%d')
+        query = f'Select * from TRANSACTIONS where TRANSACTION_DATE="{todays_date}"'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        return render_template('todays_trans.html', user=session['user'],data=data)
     return redirect('/')
 
 
 @app.route('/prod_supp_tod')
 def prod_supp_tod():
     if g.user:
-        return render_template('prod_supp_tod.html', user=session['user'])
+        todays_date = datetime.date.today().strftime('%Y-%m-%d')
+        query = f'Select * from PRODUCTS_SUPPLIED where SUPPLIED_DATE="{todays_date}"'
+        mycursor.execute(query)
+        data=mycursor.fetchall()
+        return render_template('prod_supp_tod.html', user=session['user'], data=data)
     return redirect('/')
 
 
 
-@app.route('/apply_rem_disc')
+@app.route('/apply_rem_disc',methods=['GET', 'POST'])
 def apply_rem_disc():
     if g.user:
+        if request.method == 'POST':
+            bar_code = request.form['bar_code']
+            query = f'Select * from INVENTORY where BARCODE="{bar_code}"'
+            mycursor.execute(query)
+            data=mycursor.fetchall()
+            disc = request.form['disc']
+            query = f'Update INVENTORY SET SELLING_PRICE =(SELLING_PRICE - SELLING_PRICE*0.01*{disc}) where BARCODE="{bar_code}"'
+            mycursor.execute(query)
+            myconn.commit()
+            query2 = f'Select * from INVENTORY where BARCODE="{bar_code}"'
+            mycursor.execute(query2)
+            data2=mycursor.fetchall()
+            return render_template('apply_rem_disc.html', user=session['user'], data=data, data2=data2)
         return render_template('apply_rem_disc.html', user=session['user'])
     return redirect('/')
 
