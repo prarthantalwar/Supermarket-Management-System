@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'nav.html' %}
+    <title>Add Customer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+</head>
+
+<body>
+    <div class="container">
+        <h2>Add Customer</h2>
+        <form action="/add_cust", method="POST">
+            <div class="form-group">
+                <label for="cust_phone">Customer phone:</label>
+                <input type="number" class="form-control" id="cust_phone" placeholder="Enter the customer phone"
+                    name="cust_phone" value={{cust_phone}}>
+            </div>
+            <div class="form-group">
+                <label for="cust_name">Customer name:</label>
+                <input type="text" class="form-control" id="cust_name" placeholder="Enter the customer name"
+                    name="cust_name" value={{cust_name}}>
+            </div>
+            <div class="form-group">
+                <label for="cust_mail">Customer mail:</label>
+                <input type="email" class="form-control" id="cust_mail" placeholder="Enter the customer mail"
+                    name="cust_mail">
+            </div>
+            <button type="submit" class="btn btn-default">Add customer</button>
+        </form>
+    </div>
+
+    {% include 'go_to_main.html' %}
+    
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include 'nav.html' %}
+    <title>Bill</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+</head>
+
+<body>
+    <div class="container">
+        <h3>Customer name: {{cust_name}}</h3>
+        <h3>Customer Phone: {{cust_phone}}</h3>
+        <h3>Customer mail: {{cust_mail}}</h3>
+        <h2>Bill</h2>
+        <h3>Add products</h3>
+        <form action="/bill", method="POST">
+            <div class="form-group">
+                <label for="barcode">Product barcode:</label>
+                <input type="number" class="form-control" id="barcode" placeholder="Enter the product barcode"
+                    name="barcode">
+            </div>
+
+            <div class="form-group">
+                <label for="qty">Product quantity:</label>
+                <input type="number" class="form-control" id="qty" placeholder="Enter the product quantity"
+                    name="qty">
+            </div>
+            <button type="submit" class="btn btn-default">Add to bill</button>
+        </form>
+    </div>
+    <div>
+        {{bill_items}}
+    </div>
+    
+</body>
+
+</html>

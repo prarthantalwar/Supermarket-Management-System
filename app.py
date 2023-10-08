@@ -373,14 +373,52 @@ def apply_rem_disc():
     return redirect('/')
 
 
-@app.route('/bill')
+@app.route('/bill',methods=['GET', 'POST'])
 def bill():
     if g.user:
-        print(g.user)
+        if request.method == 'POST':
+            barcode = request.form['barcode']
+            qty = request.form['qty']
+            query = f'Select * from INVENTORY where BARCODE="{barcode}"'
+            mycursor.execute(query)
+            data=mycursor.fetchall()
+            
+            return render_template('bill.html', user=session['user'], data=data)
         return render_template('bill.html', user=session['user'])
     return redirect('/')
 
 
+@app.route('/cust_auth',methods=['GET', 'POST'])
+def cust_auth():
+    if g.user:
+        if request.method == 'POST':
+            cust_phone = request.form['cust_phone']
+            cust_name = request.form['cust_name']
+            query = f'Select * from CUSTOMERS_INFO where CUSTOMER_PHONE="{cust_phone}"'
+            mycursor.execute(query)
+            data=mycursor.fetchall()
+            print(data)
+            cust_mail=data[0][3]
+            if not data:
+                return render_template('add_cust.html', user=session['user'], cust_name=cust_name, cust_phone=cust_phone)
+            return render_template('bill.html', user=session['user'], cust_phone=cust_phone, cust_name=cust_name, cust_mail=cust_mail)
+        return render_template('cust_auth.html', user=session['user'])
+    return redirect('/')
+
+
+@app.route('/add_cust',methods=['GET', 'POST'])
+def add_cust():
+    if g.user:
+        if request.method == 'POST':
+            cust_phone = request.form['cust_phone']
+            cust_name = request.form['cust_name']
+            cust_mail = request.form['cust_mail']
+            query = f'INSERT INTO CUSTOMERS_INFO (CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_MAIL) VALUES ("{cust_name}","{cust_phone}","{cust_mail}")'
+            mycursor.execute(query)
+            myconn.commit()
+            return render_template('bill.html', user=session['user'], cust_phone=cust_phone, cust_name=cust_name, cust_mail=cust_mail)
+        return render_template('add_cust.html', user=session['user'])
+    return redirect('/')
 
 
 
