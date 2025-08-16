@@ -11,7 +11,7 @@ import datetime
 
 
 # COMMAND TO USE THE CREATED DATABASE
-mycursor.execute("USE talwar_supermarket_management_system")
+mycursor.execute("USE super_market_management")
 
 app = Flask(__name__)
 

@@ -4,7 +4,7 @@ load_dotenv()
 import os
 
 # COMMAND TO CONNECT THE DATABASE
-myconn=sqlc.connect(host=os.getenv('db_host'), user=os.getenv('db_user'), password=os.getenv('db_password'),db=os.getenv('db_name'))
+myconn=sqlc.connect(host=os.getenv('db_host'), port=11530, user=os.getenv('db_user'), password=os.getenv('db_password'),db=os.getenv('db_name'))
 
 # COMMAND TO CREATE A CURSOR
 mycursor=myconn.cursor()
